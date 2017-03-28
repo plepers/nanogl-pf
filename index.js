@@ -1,43 +1,27 @@
 
 /*
   Provide various pixel-format's related capabilities.
-*/ 
+*/
 
 
 
-function _get( gl ){
+PixelFormats.getInstance = function( gl ){
   var pf = gl.__pf;
   if( pf === undefined ){
-    gl.__pf = pf = new PF( gl );
+    gl.__pf = pf = new PixelFormats( gl );
   }
   return pf;
-}
-
-
-function FMT( format, internal, type ){
-  return {
-    format   : format  ,   
-    internal : internal,     
-    type     : type     
-  };
-}
+};
 
 
 
 
 
-
-// use xor as hash complete format
-// should be good enought ...
-function _hashPF( format, type, internal ){
-  return format ^ (internal << 8) ^ (type << 16);
-}
-
-
-
-
-function PF( gl ){
+function PixelFormats( gl ){
   this.gl = gl;
+
+  // EXTENSIONS
+  // ==========
 
   this.EXT_texture_float             = gl.getExtension('OES_texture_float'              );
   this.EXT_texture_half_float        = gl.getExtension('OES_texture_half_float'         );
@@ -50,6 +34,8 @@ function PF( gl ){
                                        gl.getExtension( 'WEBKIT_WEBGL_depth_texture' ) ||
                                        gl.getExtension( 'MOZ_WEBGL_depth_texture' );
 
+  // NORMALIZATION
+  // =============
 
   // normalize HALF_FLOAT to mimic webgl2 ctx
   if( gl.HALF_FLOAT === undefined && this.EXT_texture_half_float ){
@@ -64,7 +50,7 @@ function PF( gl ){
   this._availables = {};
   this._writables  = {};
 
-  
+
   // PRESETS
   // =======
 
@@ -80,7 +66,7 @@ function PF( gl ){
 
 
 
-PF.prototype = {
+PixelFormats.prototype = {
 
   /**
    * release this instance and its reference in gl context
@@ -94,8 +80,10 @@ PF.prototype = {
     this.EXT_texture_float_linear      = null;
     this.EXT_color_buffer_float        = null;
     this.EXT_color_buffer_half_float   = null;
-    
-    delete this.gl.__pf;
+
+    if( this.gl.__pf === this ){
+      delete this.gl.__pf;
+    }
 
     this.gl = null;
   },
@@ -136,7 +124,7 @@ PF.prototype = {
    * /!\ can leave unbinded framebuffer
    */
   isWritable : function( format, type, internal ){
-    
+
     if( format===undefined || type===undefined ){
       return false;
     }
@@ -161,7 +149,7 @@ PF.prototype = {
    * /!\ can leave unbinded framebuffer
    */
   getWritableFormat : function( configs ){
-    
+
     for (var i = 0; i < configs.length; i++) {
       var cfg = configs[i];
       if( this.isWritable( cfg.format, cfg.type, cfg.internal ) ) {
@@ -183,7 +171,7 @@ PF.prototype = {
 
     gl.bindTexture( gl.TEXTURE_2D, tex );
     gl.texImage2D(  gl.TEXTURE_2D, 0, internal, 4, 4, 0, format, type, null );
-    
+
     var ok = ( gl.getError() === 0 );
     gl.deleteTexture( tex );
     return ok;
@@ -194,12 +182,12 @@ PF.prototype = {
   _testWritable : function( format, type, internal ){
     var gl = this.gl;
 
-  
+
     var tex = gl.createTexture();
 
     gl.bindTexture( gl.TEXTURE_2D, tex );
     gl.texImage2D(  gl.TEXTURE_2D, 0, internal, 4, 4, 0, format, type, null );
-    
+
 
     var fbo = gl.createFramebuffer();
     gl.bindFramebuffer( gl.FRAMEBUFFER, fbo );
@@ -222,4 +210,25 @@ PF.prototype = {
 
 
 
-module.exports = _get;
+
+
+function FMT( format, internal, type ){
+  return {
+    format   : format  ,
+    internal : internal,
+    type     : type
+  };
+}
+
+
+// use xor as hash complete format
+// should be good enought ...
+function _hashPF( format, type, internal ){
+  return format ^ (internal << 8) ^ (type << 16);
+}
+
+
+
+
+
+module.exports = PixelFormats;
