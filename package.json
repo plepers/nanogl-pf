@@ -1,6 +1,6 @@
 {
   "name": "nanogl-pf",
-  "version": "0.1.2",
+  "version": "0.1.0",
   "description": "webgl pixel formats helpers",
   "main": "pf.js",
   "scripts": {
