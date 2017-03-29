@@ -120,8 +120,9 @@ PixelFormats.prototype = {
 
 
   /**
-   * Test if FBO with given color format is "FRAMEBUFFER_COMPLETE"
-   * /!\ can leave unbinded framebuffer
+   * Test if given format is color renderable
+   * Actually est if FBO with given color format is "FRAMEBUFFER_COMPLETE"
+   * /!\ can change bound framebuffer and tex
    */
   isRenderable : function( format, type, internal ){
 
@@ -144,7 +145,7 @@ PixelFormats.prototype = {
 
 
   /**
-   * return the first writable format or null if no one is.
+   * return the first color-renderable format or null if no one is.
    * @param {Object} [configs] Array of object in the form {format,type,internal}
    * /!\ can leave unbinded framebuffer
    */
@@ -168,13 +169,11 @@ PixelFormats.prototype = {
     gl.getError();
 
     var tex = gl.createTexture();
-
     gl.bindTexture( gl.TEXTURE_2D, tex );
     gl.texImage2D(  gl.TEXTURE_2D, 0, internal, 4, 4, 0, format, type, null );
-
-    var ok = ( gl.getError() === 0 );
     gl.deleteTexture( tex );
-    return ok;
+
+    return ( gl.getError() === 0 );
 
   },
 
