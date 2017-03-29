@@ -48,7 +48,7 @@ function PixelFormats( gl ){
   }
 
   this._availables = {};
-  this._writables  = {};
+  this._renderables  = {};
 
 
   // PRESETS
@@ -123,7 +123,7 @@ PixelFormats.prototype = {
    * Test if FBO with given color format is "FRAMEBUFFER_COMPLETE"
    * /!\ can leave unbinded framebuffer
    */
-  isWritable : function( format, type, internal ){
+  isRenderable : function( format, type, internal ){
 
     if( format===undefined || type===undefined ){
       return false;
@@ -134,11 +134,11 @@ PixelFormats.prototype = {
     }
 
     var cid = _hashPF( format, type, internal );
-    if( this._writables[cid] === undefined ){
+    if( this._renderables[cid] === undefined ){
       var available = this.isAvailable( format, type, internal );
-      this._writables[cid] = available && this._testWritable( format, type, internal );
+      this._renderables[cid] = available && this._testRenderable( format, type, internal );
     }
-    return this._writables[cid];
+    return this._renderables[cid];
 
   },
 
@@ -148,11 +148,11 @@ PixelFormats.prototype = {
    * @param {Object} [configs] Array of object in the form {format,type,internal}
    * /!\ can leave unbinded framebuffer
    */
-  getWritableFormat : function( configs ){
+  getRenderableFormat : function( configs ){
 
     for (var i = 0; i < configs.length; i++) {
       var cfg = configs[i];
-      if( this.isWritable( cfg.format, cfg.type, cfg.internal ) ) {
+      if( this.isRenderable( cfg.format, cfg.type, cfg.internal ) ) {
         return cfg;
       }
     }
@@ -179,7 +179,7 @@ PixelFormats.prototype = {
   },
 
 
-  _testWritable : function( format, type, internal ){
+  _testRenderable : function( format, type, internal ){
     var gl = this.gl;
 
 
