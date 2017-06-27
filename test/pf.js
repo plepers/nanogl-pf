@@ -53,7 +53,7 @@ describe( "pf", function(){
 
     it( "RGB/UNSIGNED_BYTE always true ?", function(){
 
-      var v = PF.getInstance(gl).isWritable( gl.RGB, gl.UNSIGNED_BYTE )
+      var v = PF.getInstance(gl).isRenderable( gl.RGB, gl.UNSIGNED_BYTE )
 
       expect( v ).to.be.ok()
 
@@ -62,7 +62,7 @@ describe( "pf", function(){
 
     it( "unknown format return false", function(){
 
-      var v = PF.getInstance(gl).isWritable( 0x1010, 0x9090 )
+      var v = PF.getInstance(gl).isRenderable( 0x1010, 0x9090 )
 
       expect( v ).to.not.be.ok()
 
