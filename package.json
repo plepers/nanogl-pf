@@ -4,7 +4,7 @@
   "description": "webgl pixel formats helpers",
   "main": "pf.js",
   "scripts": {
-    "test": "jshint *.js && karma start",
+    "test": "tsc && karma start",
     "docs": "jsdoc index.js -R README.md -d ../nanogl_gh_pages -t node_modules/minami"
   },
   "repository": {
