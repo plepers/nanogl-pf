@@ -2,6 +2,23 @@
 // Generated on Sat Dec 19 2015 12:50:43 GMT+0100 (CET)
 
 module.exports = function (config) {
+
+  var glversion = 1;
+
+
+  if( config.webglVersion !== undefined ){
+    glversion = config.webglVersion;
+  }
+
+  var invgrep;
+  if( glversion === 1 ){
+    invgrep = '@WEBGL2';
+  }
+  else {
+    invgrep = '@WEBGL1';
+  }
+
+
   config.set({
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
@@ -12,6 +29,15 @@ module.exports = function (config) {
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
     frameworks: ['browserify', 'mocha'],
 
+
+    // mocha custom option
+    client: {
+      webgl_version: glversion,
+      mocha:{
+        grep : invgrep,
+        invert:true
+      }
+    },
 
     // list of files / patterns to load in the browser
     files: [
@@ -59,7 +85,7 @@ module.exports = function (config) {
 
 
     // enable / disable watching file and executing tests whenever any file changes
-    autoWatch: true,
+    autoWatch: false,
 
 
     // start these browsers
@@ -69,7 +95,7 @@ module.exports = function (config) {
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
-    singleRun: false,
+    singleRun: true,
 
     // Concurrency level
     // how many browser should be started simultanous
@@ -182,9 +208,9 @@ module.exports = function (config) {
     for( var browser in config.customLaunchers ){
       
       // skip browser not supporting webgl2
-      // var bdata = config.customLaunchers[browser];
-      // if( glversion !== 1 && bdata.webgl2 !== true ) 
-      //   continue; 
+      var bdata = config.customLaunchers[browser];
+      if( glversion !== 1 && bdata.webgl2 !== true ) 
+        continue; 
 
       browsers.push( browser );
     }
