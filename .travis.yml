@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-- '0.12'
+- 9.5.0
 env:
   global:
   - secure: BAQ1y0c6naMTk1DMo6kVJBMtlPPB3M+YrrFG4Q/N5R28gNwzHaNgduJscoBdEXXFP+XvdmLw3Fxfb+Qd499kNe9ww04qqUd5IAwVt+xhUgdaj6lYciRH5hOirG6MrgdTyzefSVn9Wfl/iQeD0Fpusg8UBGTls4rRh0cII1IqUR+rHvzOs/Bejh1cCxcAq76ClXaEzYrIuRn1Mo382k0cdJVj/fbrPH4h3Y4lO1iDbKlHjhV0oBDpoN5goBLaHebFje52rYQBouaoR0P6GVc25RoRTJcVfpLEaFPgUBHxchyLEWuaCFzgNUC4tmK6A4m3ugWCFs6veVGMV/pgsgvxpFcO9zvx2tny8hbXuQZypvww/QjI4A+8zYVgBpWONFJaP6DxhpX+G9fIrUQjqj4NltXoYLc9TnfA3OgpgFsv928DxRLIk9E39ktkQkqwxfrxdR8kulqq9P+cvPWR74KSzQYOxSgFA+s2vqYKCYV66WnoIMnbFPH8ewMDjnbXIL1kEUCzuvxBW6PC4PhMBT9HjFIdBQDLQYZm8U/8rTLFz8XfGx0iSokGoENh2a8uSymr4eqLe3H/lhkKDQYAfI2dnsblwW76p9ueAU+h7Dvmpu5QURe3/ubIEgNfggCiHVXLft8OUL1oWdQHuAbU9pjmvTMmfwdXWih64F/ojMPucOM=
@@ -13,10 +13,17 @@ cache:
   directories:
   - node_modules
 deploy:
-  provider: npm
-  email: contact@makemepulse.com
+  matrix:
+  - provider: npm
+    email: pierre.lepers@gmail.com
+    on:
+      branch: master
+      repo: plepers/nanogl-pf
+  - provider: npm
+    email: pierre.lepers@gmail.com
+    dry_run: true
+    on:
+      branch: develop
+      repo: plepers/nanogl-pf
   api_key:
-    secure: O8PGYM7jNKb8gHL7YjZu4XLrU18A8/iO3cXPWjsh8Un2/ro7I3XJKrs7ROMCChVany6MUFiFp26Li3OYlfjGwJeTHIA/RFZS8cnLXqbmr1EozsvZChi+OSm6vd/xbUHs0anIIRFcaguA9HqFttThtbBgKSvytKDjm4Wav21mdHidA+YNxaRC2EoR6Sw8CcdQHiNbKMWeXTbAHy1BC10Zd4lo410mBidvGnDDNXMEuHXGLBfhTmoQbWTqTFrwJ7kV3oxBVobjaUcXPgwDwsKKUO1WF8LF5el1cxFz8asfQtdHLfM51Vwb9pjhfcZ8LnAhPivvt4agv4VCUCtZoDJR3kSFpD1qaVTPqYccu4hRrpHWfAcLxyOY3SmYDDaPX+BJ9egTo89eC1HgiGOdDez9A8usEaAvvdvfxvv6Ux21rkqtGExJYKZlLqvIh32+Xx9DhjDIWvEcCgOui2Nlz2I/f/Z2pMwO2qMV03cBxPJlWHRnP/ePQVRG/P3w/qSCjsiL+YTls7m2IriebZXtDecs1CZXTmQHV0Ged7lbw+IgQ9B9KLcgb6mugsNUEtmbSMy+cFaWrMi+fBuAa4neGcn9ljPKG6/iAiknDtvW5/gemMQuzs1q5gcpXffjosueVPX19b+W8lFXFMtidvlPBNScNFKNoVsoobO9Nj04Px2gUhk=
-  on:
-    branch: master
-    repo: plepers/nanogl-pf
+    secure: aRazE7xUU6l/AqFQ9OllsrbNV0IFQZ3JLmL56tjMyUIem6sF69/6irlDieglvA3a/+0SF3z1b8/2hO3aEP4Dh/JpCWi47UWIfpPO2o08tIEq2SoGldY9M25RHnRBHtGwF5DJQjHPlx8f3sg7keDh52/KdwT6Nvrc9AHg+jJqQb49+lflGzzz4w+T+oc0a6QcecPXKWs/H6C/gbUtjNhvNts4dyOEPXfV4kGTJru2B/Nh9JNq/pMoOr6omxYSej4VGtsuR34Pq57CsVb5ikI3FkDL3tjv6fFx/k/1gKQQKGA+t69FhEk954/F9vZc1GN8ateEjAjLw+zXGWnzSW8xfxH2iv5biOmWNZQO1vI6xkcWGzKIBcz2LK4we8dmS6FUwo1CWqSp+hjD3QG+aU5KEzdDvDejzRwsF0x1ROw+pTXhkS0wP+wOiDpv3rXM1MUxP+R5yxFh1+osA5AVTd2i2ZlEbaCuckEawjEyDvZEti6oQ/qcJuWR5wA24w8raI2UmIr/PzGtCxxWZxIGb6w6bnuYX0BKVRZScQ3CEMO/VTTAeXoIvtu3fKW03qcxHknPglpO/47ONSxyPY+6zqnOwsfwK8HACJsysKavWX0Q+DuX6EcejP29N6n1rAMfc+zFmzhvolZyyll8QPm/vjY3T8eGN6X/JfhXzGP5klyIZB0=
