@@ -9,17 +9,9 @@ cache:
   directories:
   - node_modules
 deploy:
-- provider: npm
-  email: pierre.lepers@gmail.com
-  api_key:
-    secure: $NPM_TOKEN
-  on:
-    branch: master
-    repo: plepers/nanogl-pf
-- provider: npm
-  email: pierre.lepers@gmail.com
-  dry_run: true
+  provider: npm
+  email: $NPM_EMAIL
   api_key: $NPM_TOKEN
   on:
-    branch: develop
+    branch: master
     repo: plepers/nanogl-pf
