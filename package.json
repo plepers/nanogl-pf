@@ -1,8 +1,9 @@
 {
   "name": "nanogl-pf",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "webgl pixel formats helpers",
-  "main": "pf.js",
+  "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "test": "tsc && karma start && karma start --webgl-version=2",
     "test_gl1": "tsc && karma start",
@@ -22,7 +23,22 @@
     "url": "https://github.com/plepers/nanogl-pf/issues"
   },
   "homepage": "https://github.com/plepers/nanogl-pf#readme",
+  "browserify": {
+    "transform": [
+      [
+        "babelify",
+        {
+          "presets": [
+            "@babel/preset-env"
+          ]
+        }
+      ]
+    ]
+  },
   "devDependencies": {
+    "@babel/core": "^7.7.4",
+    "@babel/preset-env": "^7.7.4",
+    "babelify": "^10.0.0",
     "browserify": "^16.5.0",
     "expect.js": "^0.3.1",
     "karma": "^4.4.1",

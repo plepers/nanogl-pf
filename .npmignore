@@ -1,4 +1,6 @@
 node_modules
 test
 karma.conf.js
+tsconfig.json
 .travis.yml
+src

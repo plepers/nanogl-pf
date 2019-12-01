@@ -62,7 +62,10 @@ module.exports = function (config) {
     },
 
     browserify: {
-      debug: true
+      debug: true,
+      transform: [
+        ["babelify", { "presets": ["@babel/preset-env"]}]
+      ]
     },
 
     // test results reporter to use

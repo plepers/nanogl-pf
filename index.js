@@ -1,4 +1,3 @@
-"use strict";
 function isWebgl2(gl) {
     return gl.texStorage3D !== undefined;
 }
@@ -129,4 +128,4 @@ function FMT(format, internal, type) {
 function _hashPF(format, internal, type) {
     return format ^ (internal << 8) ^ (type << 16);
 }
-module.exports = PixelFormats;
+export default PixelFormats;

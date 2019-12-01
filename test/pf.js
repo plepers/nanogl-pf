@@ -1,4 +1,4 @@
-var PF         = require( '../index' );
+import PF  from '../'
 
 var expect  = require( 'expect.js' );
 
