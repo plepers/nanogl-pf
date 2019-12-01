@@ -35,7 +35,6 @@ function initGL(){
 
 
   if( __karma__.config.webgl_version===2 ){
-    glversion = 2
     gl = cvs.getContext( 'webgl2', opts )
   }
   else

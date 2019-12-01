@@ -276,4 +276,4 @@ function _hashPF( format : GLenum, internal : GLenum, type : GLenum ) : number{
 
 
 
-export = PixelFormats
+export default PixelFormats

@@ -31,4 +31,4 @@ declare class PixelFormats {
     _testAvailable(format: GLenum, type: GLenum, internal: GLenum): boolean;
     _testRenderable(format: GLenum, type: GLenum, internal: GLenum): boolean;
 }
-export = PixelFormats;
+export default PixelFormats;
