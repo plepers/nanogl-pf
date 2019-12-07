@@ -3,7 +3,7 @@
   Provide various pixel-format's related capabilities.
 */
 
-interface FormatDesc {
+export type FormatDesc = {
   format   : GLenum,
   internal : GLenum,
   type     : GLenum
@@ -15,32 +15,32 @@ function isWebgl2(gl: WebGLRenderingContext | WebGL2RenderingContext): gl is Web
 }
 
 
-class PixelFormats {
+export default class PixelFormats {
   
 
   
-  gl: WebGLRenderingContext | WebGL2RenderingContext;
+  readonly gl: WebGLRenderingContext | WebGL2RenderingContext;
   
-  EXT_texture_float: OES_texture_float | null;
-  EXT_texture_half_float: OES_texture_half_float | null;
+  EXT_texture_float            : OES_texture_float             | null;
+  EXT_texture_half_float       : OES_texture_half_float        | null;
   EXT_texture_half_float_linear: OES_texture_half_float_linear | null;
-  EXT_texture_float_linear: OES_texture_float_linear | null;
-  EXT_color_buffer_float: any;
+  EXT_texture_float_linear     : OES_texture_float_linear      | null;
+  EXT_color_buffer_float     : any;
   EXT_color_buffer_half_float: any;
-  WEBGL_depth_texture: any;
+  WEBGL_depth_texture        : any;
 
 
-  _availables: Record<string, boolean>;
-  _renderables: Record<string, boolean>;
+  private readonly _availables: Record<string, boolean>;
+  private readonly _renderables: Record<string, boolean>;
 
 
-  RGB8       : FormatDesc;
-  RGBA8      : FormatDesc;
-  RGB32F     : FormatDesc;
-  RGBA32F    : FormatDesc;
-  RGB16F     : FormatDesc;
-  RGBA16F    : FormatDesc;
-  A2B10G10R10: FormatDesc;
+  readonly RGB8       : FormatDesc;
+  readonly RGBA8      : FormatDesc;
+  readonly RGB32F     : FormatDesc;
+  readonly RGBA32F    : FormatDesc;
+  readonly RGB16F     : FormatDesc;
+  readonly RGBA16F    : FormatDesc;
+  readonly A2B10G10R10: FormatDesc;
 
 
 
@@ -100,7 +100,7 @@ class PixelFormats {
     
   static getInstance( gl : WebGLRenderingContext | WebGL2RenderingContext ) : PixelFormats {
     const agl = gl as any;
-    var pf = agl.__pf;
+    let pf = agl.__pf;
     if( pf === undefined ){
       agl.__pf = pf = new PixelFormats( gl );
     }
@@ -147,17 +147,13 @@ class PixelFormats {
   /**
    *  test if texture allocation with given pf leave gl error
    */
-  isAvailable( format : GLenum, type : GLenum, internal : GLenum ) : boolean {
+  isAvailable( format : GLenum, type : GLenum, internal : GLenum = format) : boolean {
 
     if( format===undefined || type===undefined ){
       return false;
     }
 
-    if( internal === undefined ) {
-      internal = format;
-    }
-
-    var cid = _hashPF( format, type, internal );
+    const cid = _hashPF( format, type, internal );
     if( this._availables[cid] === undefined ){
       this._availables[cid] = this._testAvailable( format, type, internal );
     }
@@ -171,14 +167,10 @@ class PixelFormats {
    * Actually est if FBO with given color format is "FRAMEBUFFER_COMPLETE"
    * /!\ can change bound framebuffer and tex
    */
-  isRenderable( format : GLenum, type : GLenum, internal : GLenum ) : boolean {
+  isRenderable( format : GLenum, type : GLenum, internal : GLenum = format ) : boolean {
 
     if( format===undefined || type===undefined ){
       return false;
-    }
-
-    if( internal === undefined ) {
-      internal = format;
     }
 
     const cid = _hashPF( format, type, internal );
@@ -209,7 +201,7 @@ class PixelFormats {
   }
 
 
-  _testAvailable( format : GLenum, type : GLenum, internal : GLenum ) : boolean {
+  private _testAvailable( format : GLenum, type : GLenum, internal : GLenum ) : boolean {
     const gl = this.gl;
 
     // flush errors
@@ -225,7 +217,7 @@ class PixelFormats {
   }
 
 
-  _testRenderable( format : GLenum, type : GLenum, internal : GLenum ) : boolean {
+  private _testRenderable( format : GLenum, type : GLenum, internal : GLenum ) : boolean {
     const gl = this.gl;
 
     const tex = gl.createTexture();
@@ -268,12 +260,7 @@ function FMT( format : GLenum, internal : GLenum, type : GLenum ) : FormatDesc {
 
 // use xor as hash complete format
 // should be good enought ...
-function _hashPF( format : GLenum, internal : GLenum, type : GLenum ) : number{
+function _hashPF( format : GLenum, internal : GLenum, type : GLenum ) : number {
   return format ^ (internal << 8) ^ (type << 16);
 }
 
-
-
-
-
-export default PixelFormats

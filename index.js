@@ -1,7 +1,7 @@
 function isWebgl2(gl) {
     return gl.texStorage3D !== undefined;
 }
-class PixelFormats {
+export default class PixelFormats {
     constructor(gl) {
         this.gl = gl;
         this.EXT_texture_float = gl.getExtension('OES_texture_float');
@@ -33,7 +33,7 @@ class PixelFormats {
     }
     static getInstance(gl) {
         const agl = gl;
-        var pf = agl.__pf;
+        let pf = agl.__pf;
         if (pf === undefined) {
             agl.__pf = pf = new PixelFormats(gl);
         }
@@ -57,25 +57,19 @@ class PixelFormats {
         else
             return this.isAvailable(this.gl.DEPTH_COMPONENT, this.gl.UNSIGNED_INT, this.gl.DEPTH_COMPONENT);
     }
-    isAvailable(format, type, internal) {
+    isAvailable(format, type, internal = format) {
         if (format === undefined || type === undefined) {
             return false;
         }
-        if (internal === undefined) {
-            internal = format;
-        }
-        var cid = _hashPF(format, type, internal);
+        const cid = _hashPF(format, type, internal);
         if (this._availables[cid] === undefined) {
             this._availables[cid] = this._testAvailable(format, type, internal);
         }
         return this._availables[cid];
     }
-    isRenderable(format, type, internal) {
+    isRenderable(format, type, internal = format) {
         if (format === undefined || type === undefined) {
             return false;
-        }
-        if (internal === undefined) {
-            internal = format;
         }
         const cid = _hashPF(format, type, internal);
         if (this._renderables[cid] === undefined) {
@@ -128,4 +122,3 @@ function FMT(format, internal, type) {
 function _hashPF(format, internal, type) {
     return format ^ (internal << 8) ^ (type << 16);
 }
-export default PixelFormats;
