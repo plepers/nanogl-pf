@@ -1,4 +1,4 @@
-export declare type FormatDesc = {
+export type FormatDesc = {
     format: GLenum;
     internal: GLenum;
     type: GLenum;
