@@ -136,7 +136,7 @@ export default class PixelFormats {
 
 
   /**
-   * Create a PixelFormats instance or return the existing one for given gl context.
+   * Create a PixelFormats instance or return the existing one for given webgl context.
    * @param {WebGLRenderingContext | WebGL2RenderingContext} gl  The webgl context
    */
   static getInstance( gl : WebGLRenderingContext | WebGL2RenderingContext ) : PixelFormats {
@@ -153,7 +153,7 @@ export default class PixelFormats {
 
 
   /**
-   * Release this instance and its reference in the gl context.
+   * Release this instance and its reference in the webgl context.
    * Also release all extensions.
    */
   dispose(){
@@ -241,7 +241,7 @@ export default class PixelFormats {
    *
    * **Important :** Using this method can change bound framebuffer and texture.
    *
-   * @param {FormatDesc[]} configs List of formats to test
+   * @param {FormatDesc[]} configs The list of formats to test
    */
   getRenderableFormat( configs : FormatDesc[] ) : FormatDesc|null {
 
