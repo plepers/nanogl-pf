@@ -1,4 +1,4 @@
-/** The definition for a pixel format. */
+/** The description of a pixel format. */
 export type FormatDesc = {
   /** The pixel format (`GL_RGB`, `GL_RGBA`, etc.) */
   format   : GLenum,
