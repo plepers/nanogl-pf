@@ -1,6 +1,10 @@
+/** The definition for a pixel format. */
 export type FormatDesc = {
+  /** The pixel format (`GL_RGB`, `GL_RGBA`, etc.) */
   format   : GLenum,
+  /** The pixel internal format */
   internal : GLenum,
+  /** The pixel data type (`GL_UNSIGNED_BYTE`, `GL_FLOAT`, etc.) */
   type     : GLenum
 }
 
