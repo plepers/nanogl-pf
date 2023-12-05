@@ -1,11 +1,10 @@
-
-/*
-  Provide various pixel-format's related capabilities.
-*/
-
+/** The description of a pixel format. */
 export type FormatDesc = {
+  /** The pixel format (`GL_RGB`, `GL_RGBA`, etc.) */
   format   : GLenum,
+  /** The pixel internal format */
   internal : GLenum,
+  /** The pixel data type (`GL_UNSIGNED_BYTE`, `GL_FLOAT`, etc.) */
   type     : GLenum
 }
 
@@ -14,36 +13,79 @@ function isWebgl2(gl: WebGLRenderingContext | WebGL2RenderingContext): gl is Web
   return (gl as WebGL2RenderingContext).texStorage3D !== undefined;
 }
 
-
+/**
+ * This class provides various pixel-format related capabilities.
+ */
 export default class PixelFormats {
-  
-
-  
+  /** The webgl context this ArrayBuffer belongs to */
   readonly gl: WebGLRenderingContext | WebGL2RenderingContext;
-  
+
+  /**
+   * The OES_texture_float webgl extension :
+   * exposes floating-point pixel types for textures
+   */
   EXT_texture_float            : OES_texture_float             | null;
+  /**
+   * The OES_texture_half_float webgl extension :
+   * adds texture formats with 16- and 32-bit floating-point components
+   */
   EXT_texture_half_float       : OES_texture_half_float        | null;
+  /**
+   * The OES_texture_half_float_linear webgl extension :
+   * allows linear filtering with half floating-point pixel types for textures
+   */
   EXT_texture_half_float_linear: OES_texture_half_float_linear | null;
+  /**
+   * The OES_texture_float_linear webgl extension :
+   * allows linear filtering with floating-point pixel types for textures
+   */
   EXT_texture_float_linear     : OES_texture_float_linear      | null;
+  /**
+   * The EXT_color_buffer_float webgl extension :
+   * adds the ability to render a variety of floating point formats
+   */
   EXT_color_buffer_float     : any;
+  /**
+   * The EXT_color_buffer_half_float webgl extension :
+   * adds the ability to render to 16-bit floating-point color buffers
+   */
   EXT_color_buffer_half_float: any;
+  /**
+   * The depth texture webgl extension :
+   * defines 2D depth and depth-stencil textures
+   */
   WEBGL_depth_texture        : any;
 
-
+  /**
+   * List of pixel formats that have already been tested for texture allocation
+   * to be possible or not, and the corresponding result
+   */
   private readonly _availables: Record<string, boolean>;
+  /**
+   * List of pixel formats that have already been tested
+   * to be color renderable or not, and the corresponding result
+   */
   private readonly _renderables: Record<string, boolean>;
 
-
+  /** Pixel format preset for RGB8 */
   readonly RGB8       : FormatDesc;
+  /** Pixel format preset for RGBA8 */
   readonly RGBA8      : FormatDesc;
+  /** Pixel format preset for RGB32F */
   readonly RGB32F     : FormatDesc;
+  /** Pixel format preset for RGBA32F */
   readonly RGBA32F    : FormatDesc;
+  /** Pixel format preset for RGB16F */
   readonly RGB16F     : FormatDesc;
+  /** Pixel format preset for RGBA16F */
   readonly RGBA16F    : FormatDesc;
+  /** Pixel format preset for A2B10G10R10 */
   readonly A2B10G10R10: FormatDesc;
 
 
-
+  /**
+   * @param {WebGLRenderingContext | WebGL2RenderingContext} gl  The webgl context this PixelFormats belongs to
+   */
   constructor( gl : WebGLRenderingContext | WebGL2RenderingContext ){
     this.gl = gl;
 
@@ -97,7 +139,10 @@ export default class PixelFormats {
   }
 
 
-    
+  /**
+   * Create a PixelFormats instance or return the existing one for given webgl context.
+   * @param {WebGLRenderingContext | WebGL2RenderingContext} gl  The webgl context
+   */
   static getInstance( gl : WebGLRenderingContext | WebGL2RenderingContext ) : PixelFormats {
     const agl = gl as any;
     let pf = agl.__pf;
@@ -106,14 +151,14 @@ export default class PixelFormats {
     }
     return pf;
   }
-  
+
 
 
 
 
   /**
-   * release this instance and its reference in gl context
-   * release all extensions
+   * Release this instance and its reference in the webgl context.
+   * Also release all extensions.
    */
   dispose(){
 
@@ -134,7 +179,7 @@ export default class PixelFormats {
 
 
   /**
-   * return true if Texture with depth pixel format can be created.
+   * Know whether a texture with depth pixel format can be created or not.
    */
   hasDepthTexture(){
     if( isWebgl2( this.gl ))
@@ -145,7 +190,13 @@ export default class PixelFormats {
 
 
   /**
-   *  test if texture allocation with given pf leave gl error
+   * Know whether texture allocation with given pixel format is possible or throws gl error.
+   *
+   * **Important :** Using this method can change bound texture.
+   *
+   * @param {GLenum} [format]  The pixel format (`GL_RGB`, `GL_RGBA`, etc.) to test
+   * @param {GLenum} [type]  The pixel data type (`GL_UNSIGNED_BYTE`, `GL_FLOAT`, etc.) to test
+   * @param {GLenum} [internal]  The pixel internal format to test, defaults to the `format` parameter value
    */
   isAvailable( format : GLenum, type : GLenum, internal : GLenum = format) : boolean {
 
@@ -163,9 +214,15 @@ export default class PixelFormats {
 
 
   /**
-   * Test if given format is color renderable
-   * Actually est if FBO with given color format is "FRAMEBUFFER_COMPLETE"
-   * /!\ can change bound framebuffer and tex
+   * Know whether given format is color renderable or not.
+   *
+   * The result will be positive if an FBO to which we attach a texture that is using the given format has status `GL_FRAMEBUFFER_COMPLETE`.
+   *
+   * **Important :** Using this method can change bound framebuffer and texture.
+   *
+   * @param {GLenum} [format]  The pixel format (`GL_RGB`, `GL_RGBA`, etc.) to test
+   * @param {GLenum} [type]  The pixel data type (`GL_UNSIGNED_BYTE`, `GL_FLOAT`, etc.) to test
+   * @param {GLenum} [internal]  The pixel internal format to test, defaults to the `format` parameter value
    */
   isRenderable( format : GLenum, type : GLenum, internal : GLenum = format ) : boolean {
 
@@ -184,9 +241,11 @@ export default class PixelFormats {
 
 
   /**
-   * return the first color-renderable format or null if no one is.
-   * @param {Object} [configs] Array of object in the form {format,type,internal}
-   * /!\ can leave unbinded framebuffer
+   * Get the first color-renderable format from given list or null if there is none.
+   *
+   * **Important :** Using this method can change bound framebuffer and texture.
+   *
+   * @param {FormatDesc[]} configs The list of formats to test
    */
   getRenderableFormat( configs : FormatDesc[] ) : FormatDesc|null {
 
@@ -201,6 +260,17 @@ export default class PixelFormats {
   }
 
 
+  /**
+   * Test if texture allocation with given pixel format is possible or throws gl error.
+   *
+   * Used by {@link PixelFormats#isAvailable}
+   *
+   * **Important :** Using this method can change bound texture.
+   *
+   * @param {GLenum} [format]  The pixel format (`GL_RGB`, `GL_RGBA`, etc.) to test
+   * @param {GLenum} [type]  The pixel data type (`GL_UNSIGNED_BYTE`, `GL_FLOAT`, etc.) to test
+   * @param {GLenum} [internal]  The pixel internal format to test, defaults to the `format` parameter value
+   */
   private _testAvailable( format : GLenum, type : GLenum, internal : GLenum ) : boolean {
     const gl = this.gl;
 
@@ -216,7 +286,17 @@ export default class PixelFormats {
 
   }
 
-
+  /**
+   * Test if given format is color renderable or not.
+   *
+   * Used by {@link PixelFormats#isRenderable}
+   *
+   * **Important :** Using this method can change bound framebuffer and texture.
+   *
+   * @param {GLenum} [format]  The pixel format (`GL_RGB`, `GL_RGBA`, etc.) to test
+   * @param {GLenum} [type]  The pixel data type (`GL_UNSIGNED_BYTE`, `GL_FLOAT`, etc.) to test
+   * @param {GLenum} [internal]  The pixel internal format to test, defaults to the `format` parameter value
+   */
   private _testRenderable( format : GLenum, type : GLenum, internal : GLenum ) : boolean {
     const gl = this.gl;
 
@@ -263,4 +343,3 @@ function FMT( format : GLenum, internal : GLenum, type : GLenum ) : FormatDesc {
 function _hashPF( format : GLenum, internal : GLenum, type : GLenum ) : number {
   return format ^ (internal << 8) ^ (type << 16);
 }
-
